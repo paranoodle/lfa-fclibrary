@@ -30,12 +30,41 @@
     \subsection{Algorithme K-means}
 
       Algorithme de hard clustering, K-means est l'algorithme de clustering le plus basique. Il génère des fonctions d'appartenance binaires, ne permettant que des valeurs de 1 (appartient au cluster) ou 0 (n'appartient pas au cluster).
-
-      \# algo détaillé ici
-
+      
+      Le concept derrière K-means est de partitionner un ensemble d'observations $(x_1,x_2,...,x_n)$ de manière à minimiser le \textbf{WCSS}, où \textit{Within-Cluster Sum of Squares} (Somme des carrés interne au cluster), dont la formule est $\sum_{i=1}^{k}\sum_{x\in S_i}||x-\mu_i||^2$, où $\mu_i$ est la moyenne des points dans chaque cluster.
+      
+      L'algorithme standard de K-means, aussi connu sous le nom d'\textit{Algorithme de Lloyd}, fonctionne en alternant entre deux étapes, avec $c_1^{(1)},...,c_k^{(t)}$ l'ensemble initial de $k$ centres:
+      
+      L'étape \textbf{d'assignement} lie chaque observation $x_p$ au cluster dont le centre donne le WCSS minimal. Ceci correspond à partitionner les observations suivant le diagramme de Voronoi généré par les centres: chaque $x_p$ est assigné à un et un seul cluster $S^{(t)}$, avec $S_i^{(t)}=\{x_p:||x_p-c_i^{(t)}||^2\leq ||x_p-c_j^{(t)}||^2\forall j,1\leq j\leq k\}$
+      
+      L'étape de \textbf{mise à jour} calcule des nouveaux centres correspondant au centres géométriques des nouveaux clusters, en minimisant le WCSS. On a alors $m_i^{(t+1)}=\frac{1}{|S_i^{(t)}|}\sum_{x_j\in S_i^{(t)}}x_j$
+      
+      Dès qu'on atteint une itération où l'étape de mise à jour ne modifie plus de valeurs, l'algorithme se termine.
+      
+      Par contre, l'algorithme K-means doit être initialisé avec deux informations: le nombre de clusters désirés, ainsi que les moyennes initiales pour chacun de ses clusters. Dans le cas le plus simple, les moyennes initiales sont obtenues au hasard parmis les observations déjà présentes.
+      
       \subsubsection{K-means++}
+      
+        K-means++ propose une solution au problème d'initialisation de l'algorithme K-means. Un problème majeur avec prendre les moyennes initiales de manière aléatoire est que les clusters résultant seront potentiellement différents à chaque lancement de l'algorithme. L'idée de K-means++ est de tenter de trouver des moyennes initiales éloignées des autres, sans pour autant commencer sur des observations aberrantes.
+        
+        L'algorithme de K-means++ fonctionne aussi de manière iterative. On commence par choisir un "centre" uniformément aléatoirement parmi les observations, puis on alterne entre deux étapes jusqu'à avoir choisi les $k$ points voulus:
+        
+        \begin{enumerate}
+          \item Pour chaque point $x$, on calcule $D(x)$, la distance entre $x$ et le centre le plus proche.
+          \item On choisi un nouveau centre aléatoirement, mais pas de manière uniforme. On utilise une distribution où chaque point $x$ est choisi avec une probabilité proportionelle à $D(x)^2$.
+        \end{enumerate}
+        
+        Ceci prend plus de temps que d'initialiser K-means de manière complètement aléatoire, mais le K-means après est plus efficace et tournera en moyenne moins longtemps pour un meilleur résultat.
 
     \subsection{Algorithme Fuzzy C-means}
+    
+      Le concept de C-means est similaire à celui de K-means, mais en logique floue plutôt qu'en logique binaire. La principale différence est que plutôt que de calculer l'appartenance à un cluster comme étant $\{0,1\}$ avec une appartenance à un seul cluster par point, on calcule les coefficients d'appartenance à chaque cluster pour chaque observation, pour avoir $[0,1]$ d'appartenance par cluster, avec un total de 1.
+      
+      Ceci veut dire que plutôt que d'avoir un ensemble de clusters $S$, on travaille avec une matrice $W=w_{i,j}\in [0,1], i=1,...,n, j=1,...,c$ où chaque élément $w_{i,j}$ correspond au degré auquel l'observation $x_i$ appartient au cluster $c_j$, et le WCSS correspond à $\sum_{i=1}^n\sum_{j=1}^c w_{ij}^m ||x_i-c_j||^2$, où $w_{ij} = \frac{1}{\sum_{k=1}^c (\frac{||x_i-c_j||}{||x_i-c_k||}) ^{\frac{2}{m-1}}}$.
+      
+      $m \geq 1$ est le \textit{fuzzifier}, qui détermine le niveau de flou des clusters. Plus $m$ est élevé plus les degrés d'appartenance seront bas, et inversément. La valeur la plus commune est $m=2$, et $m=1$ donne des résultats presque identiques à K-means.
+      
+      Additionellement, comme C-means travaille avec des valeurs réelles là où K-means utilise des valeurs binaires, l'algorithme prend fin lorsque que le changement des coefficients entre deux itérations est inférieur à $\varepsilon$, le seuil de sensibilité donné.
 
     \subsection{Algorithmes Expectation-Maximization}
 
