@@ -44,6 +44,17 @@
       Par contre, l'algorithme K-means doit être initialisé avec deux informations: le nombre de clusters désirés, ainsi que les moyennes initiales pour chacun de ses clusters. Dans le cas le plus simple, les moyennes initiales sont obtenues au hasard parmis les observations déjà présentes.
       
       \subsubsection{K-means++}
+      
+        K-means++ propose une solution au problème d'initialisation de l'algorithme K-means. Un problème majeur avec prendre les moyennes initiales de manière aléatoire est que les clusters résultant seront potentiellement différents à chaque lancement de l'algorithme. L'idée de K-means++ est de tenter de trouver des moyennes initiales éloignées des autres, sans pour autant commencer sur des observations aberrantes.
+        
+        L'algorithme de K-means++ fonctionne aussi de manière iterative. On commence par choisir un "centre" uniformément aléatoirement parmi les observations, puis on alterne entre deux étapes jusqu'à avoir choisi les $k$ points voulus:
+        
+        \begin{enumerate}
+          \item Pour chaque point $x$, on calcule $D(x)$, la distance entre $x$ et le centre le plus proche.
+          \item On choisi un nouveau centre aléatoirement, mais pas de manière uniforme. On utilise une distribution où chaque point $x$ est choisi avec une probabilité proportionelle à $D(x)^2$.
+        \end{enumerate}
+        
+        Ceci prend plus de temps que d'initialiser K-means de manière complètement aléatoire, mais le K-means après est plus efficace et tournera en moyenne moins longtemps pour un meilleur résultat.
 
     \subsection{Algorithme Fuzzy C-means}
 
