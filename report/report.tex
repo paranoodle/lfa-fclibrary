@@ -18,7 +18,7 @@
   \newpage
 
   \section{Introduction}
-  
+
     Notre projet consiste à l'implémentation d'une variété d'algorithmes de Fuzzy Clustering dans l'idée d'en faire un ensemble de méthodes efficaces et facile d'usage.
 
   \section{Contexte}
@@ -69,20 +69,36 @@
       Additionellement, comme C-means travaille avec des valeurs réelles là où K-means utilise des valeurs binaires, l'algorithme prend fin lorsque que le changement des coefficients entre deux itérations est inférieur à $\varepsilon$, le seuil de sensibilité donné.
 
     \subsection{Algorithmes Expectation-Maximization}
-    
+
       L'Expectation-Maximization (où \textit{EM}) est une catégorie d'algorithmes travaillant de manière itérative avec deux étapes principales. La partie \textbf{Expectation} qui calcule des espérances, et la partie \textbf{Maximization} qui cherche quel paramètre peut maximiser cette quantité.
-      
+
       L'algorithme K-means est un exemple d'application d'un algorithme EM, mais il est possible de prendre directement un EM comme source pour ensuite tenter de génerer des clusters de manière différente que le K-means. En particulier, en appliquant des filtres ou en utilisant des algorithmes de réduction de bruit à l'étape d'expectation. Les filtres de Kalman (où estimation linéaire quadratique) sont particulièrement utiles dans les cas où les observations pourraient contenir du bruit.
 
   \section{Etat de l'art}
+
+  Les fonctions que nous allons mettre en place sont utilisées dans des domaines variés, par exemple pour:
+  \begin{itemize}
+    \item la météorologie
+    \item l'analyse d'images
+    \item le marketing
+    \item la bioinformatique
+    \item la biologie
+    \item la medecine
+    \item ou encore la psychologie
+  \end{itemize}
+
+  Il existe encore beaucoup d'autres domaines concernés, on constate que l'utilité de ces fonctions est immense.
+
+
+  Nous passons ici en revue quelques outils possédant des implémentations de ces même fonctions.
 
   \subsection{SciPy}
 
   SciPy est une librairie Python possédant une implémentation de K-means.
 
-  \subsection{scikit-fuzzy}
+  \subsection{Scikit}
 
-  scikit-fuzzy est une autre librairie Python, mais cette fois possédant une implémentation de C-means
+  Scikit est une autre librairie Python, mais cette fois possédant une implémentation de K-means et C-means.
 
   \subsection{Mathematica}
 
@@ -92,19 +108,15 @@
 
   MATLAB est un language de programmation, il est utilisé à des fins de calculs numériques.
 
-  \
-
   Ce langage possède une implémentation de C-means,
   mais également une implémentation de Subtractive Clustering
-  qui est un algorithme pour éstimer le nombres de clusters pour un jeu de données.
+  qui est un algorithme pour estimer le nombres de clusters pour un jeu de données.
 
   %Fuzzy C-Means Clustering et Subtractive Clustering -> http://ch.mathworks.com/help/fuzzy/fuzzy-clustering.html?requestedDomain=www.mathworks.com
 
-  \subsection{R}
+  %\subsection{R}
 
-  R est un logiciel libre de traitement de données et d'analyse statistique, il utilise le langage de programmation S.
-
-
+  %R est un logiciel libre de traitement de données et d'analyse statistique, il utilise le langage de programmation S.
 
   %FANNY -> https://stat.ethz.ch/R-manual/R-devel/library/cluster/html/fanny.html
   % ET: http://www.r-bloggers.com/fuzzy-clustering-with-fanny/
