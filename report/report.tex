@@ -31,7 +31,17 @@
     
       Algorithme de hard clustering, K-means est l'algorithme de clustering le plus basique. Il génère des fonctions d'appartenance binaires, ne permettant que des valeurs de 1 (appartient au cluster) ou 0 (n'appartient pas au cluster).
       
-      \# algo détaillé ici
+      Le concept derrière K-means est de partitionner un ensemble d'observations $(x_1,x_2,...,x_n)$ de manière à minimiser le \textbf{WCSS}, où \textit{Within-Cluster Sum of Squares} (Somme des carrés interne au cluster), dont la formule est $\sum_{i=1}^{k}\sum_{x\in S_i}||x-\mu_i||^2$, où $\mu_i$ est la moyenne des points dans chaque cluster.
+      
+      L'algorithme standard de K-means, aussi connu sous le nom d'\textit{Algorithme de Lloyd}, fonctionne en alternant entre deux étapes, avec $m_1^{(1)},...,m_k^{(t)}$ l'ensemble initial de $k$ moyennes:
+      
+      L'étape \textbf{d'assignement} lie chaque observation $x_p$ au cluster dont la moyenne donne le WCSS minimal. Ceci correspond à partitionner les observations suivant le diagramme de Voronoi généré par les moyennes: chaque $x_p$ est assigné à un $S^{(t)}$, avec $S_i^{(t)}=\{x_p:||x_p-m_i^{(t)}||^2\leq ||x_p-m_j^{(t)}||^2\forall j,1\leq j\leq k\}$
+      
+      L'étape de \textbf{mise à jour} calcule des nouvelles moyennes correspondant au centres géométriques des nouveaux clusters, en minimisant le WCSS. On a alors $m_i^{(t+1)}=\frac{1}{|S_i^{(t)}|}\sum_{x_j\in S_i^{(t)}}x_j$
+      
+      Dès qu'on atteint une itération où l'étape de mise à jour ne modifie plus de valeurs, l'algorithme se termine.
+      
+      Par contre, l'algorithme K-means doit être initialisé avec deux informations: le nombre de clusters désirés, ainsi que les moyennes initiales pour chacun de ses clusters. Dans le cas le plus simple, les moyennes initiales sont obtenues au hasard parmis les observations déjà présentes.
       
       \subsubsection{K-means++}
     
