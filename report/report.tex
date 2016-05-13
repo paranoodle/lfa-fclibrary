@@ -18,6 +18,8 @@
   \newpage
 
   \section{Introduction}
+  
+    Notre projet consiste à l'implémentation d'une variété d'algorithmes de Fuzzy Clustering dans l'idée d'en faire un ensemble de méthodes efficaces et facile d'usage.
 
   \section{Contexte}
 
@@ -67,6 +69,10 @@
       Additionellement, comme C-means travaille avec des valeurs réelles là où K-means utilise des valeurs binaires, l'algorithme prend fin lorsque que le changement des coefficients entre deux itérations est inférieur à $\varepsilon$, le seuil de sensibilité donné.
 
     \subsection{Algorithmes Expectation-Maximization}
+    
+      L'Expectation-Maximization (où \textit{EM}) est une catégorie d'algorithmes travaillant de manière itérative avec deux étapes principales. La partie \textbf{Expectation} qui calcule des espérances, et la partie \textbf{Maximization} qui cherche quel paramètre peut maximiser cette quantité.
+      
+      L'algorithme K-means est un exemple d'application d'un algorithme EM, mais il est possible de prendre directement un EM comme source pour ensuite tenter de génerer des clusters de manière différente que le K-means. En particulier, en appliquant des filtres ou en utilisant des algorithmes de réduction de bruit à l'étape d'expectation. Les filtres de Kalman (où estimation linéaire quadratique) sont particulièrement utiles dans les cas où les observations pourraient contenir du bruit.
 
   \section{Etat de l'art}
 
