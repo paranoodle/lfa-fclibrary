@@ -45,6 +45,7 @@
 
       Par contre, l'algorithme K-means doit être initialisé avec deux informations: le nombre de clusters désirés, ainsi que les moyennes initiales pour chacun de ses clusters. Dans le cas le plus simple, les moyennes initiales sont obtenues au hasard parmis les observations déjà présentes.
 
+      \newpage
       \subsubsection{K-means++}
 
         K-means++ propose une solution au problème d'initialisation de l'algorithme K-means. Un problème majeur avec prendre les moyennes initiales de manière aléatoire est que les clusters résultant seront potentiellement différents à chaque lancement de l'algorithme. L'idée de K-means++ est de tenter de trouver des moyennes initiales éloignées des autres, sans pour autant commencer sur des observations aberrantes.
@@ -130,9 +131,7 @@
   Pour commencer nous allons mettre en place K-means dont l'implémentation est plus simple que celle de C-means,
   cela nous permettra également de bien comprendre le fonctionnement des ces méthodes et par la suite de les comparer (C-means étant de la logique floue).
 
-  Nous nous intéresserons ensuite aux algorithmes Expectation-Maximization.
-
-  \section{Conclusion}
+  Nous nous intéresserons ensuite aux algorithmes Expectation-Maximization avec divers filtres, ainsi qu'à des algorithmes permettant de calculer le nombres de cluster plutôt que de demander une entrée manuelle (tel \texttt{sub clustering} de Matlab).
 
 \bibliography{biblio}
 \nocite{*}
