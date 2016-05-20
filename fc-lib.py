@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 
 class Point:
@@ -8,9 +8,8 @@ class Point:
     
   def assign_cluster(self, new_cluster):
     if self.cluster:
-      print "had cluster", self.cluster
       self.cluster.points.remove(self)
-      
+    
     self.cluster = new_cluster
     new_cluster.points.append(self)
     
@@ -19,8 +18,11 @@ class Point:
 
 
 class Cluster:
-  def __init__(self, points=[], center=None):
-    self.points = points
+  def __init__(self, points=None, center=None):
+    if points:
+      self.points = points
+    else:
+      self.points = []
     
     if center != None:
       self.center = center
@@ -30,14 +32,14 @@ class Cluster:
   def compute_center(self):
     if self.points:
       return sum(p.value for p in self.points) / float(len(self.points))
-      #return numpy.mean(self.points)
+      #return np.mean(self.points)
     else:
       return self.center
     
   def update_center(self):
     old_center = self.center
     self.center = self.compute_center()
-    print [p.value for p in self.points]
+    print " ", [p.value for p in self.points]
     print " ", old_center, "->", self.center
     return (old_center != self.center)
     
@@ -64,22 +66,23 @@ def simple_K(input, initial_centers):
     # assignment
     print "assignment step"
     for x in input:
-      min = (None, numpy.inf)
+      print "  point", x
+      min = (None, np.inf)
       for c in clusters:
         dist = (x.value - c.center) ** 2
-        print "dist for", c, ":", dist
+        print "    dist for", c, ":", dist
         if dist < min[1]:
           min = (c, dist)
-      print x, "->", min[0]
+      print "   ", x, "->", min[0]
       x.assign_cluster(min[0])
-      print x.cluster, ";", [p.value for p in x.cluster.points]
+      print "   ", x.cluster, ";", [p.value for p in x.cluster.points]
       
     # update
     print "update step"
     updated = False
     for c in clusters:
       updated = c.update_center() or updated
-      print updated
+      print "   ", updated
         
     if not updated:
       return clusters
