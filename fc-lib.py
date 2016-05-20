@@ -1,4 +1,6 @@
 import numpy as np
+from scipy import stats
+import random
 
 
 class Point:
@@ -16,7 +18,7 @@ class Point:
   def distance_to(self, point):
     # TODO: check equal dimensions
     # TODO: adapt to 2+ dimensions
-    return x.value - point
+    return abs(self.value - point)
     
   def __str__(self):
     return str(self.value)
@@ -62,8 +64,32 @@ def wcss(clusters):
   return sum
 
 
-def kmpp(input):
-  pass
+def kmpp(input, center_count):
+  # choose random center
+  i = random.randint(0,len(input)-1)
+  centers = [input[i].value]
+  print [str(c) for c in centers]
+  
+  for iter in xrange(center_count - 1):
+    # step 1
+    print "step 1"
+    dist = []
+    for x in input:
+      dist.append(min([x.distance_to(c) for c in centers]))
+    print "  dist",dist
+    
+    # step 2
+    print "step 2"
+    xk = np.arange(len(input))
+    dist_2 = map(lambda d: d ** 2, dist)
+    dist_s = float(sum(dist_2))
+    pk = map(lambda d: d / dist_s, dist_2) # probabilities, sum=1
+    print "  probabilities", pk
+    rand = stats.rv_discrete(values=(xk, pk))
+    centers.append(input[rand.rvs()].value)
+    print "  new center", centers[-1], "->", centers
+    
+  return centers
 
 
 def simple_K(input, initial_centers):
@@ -98,5 +124,6 @@ def simple_K(input, initial_centers):
       return clusters
     
 test = [Point(1), Point(2), Point(3), Point(4)]
-simple_K(test, [0,5])
+#simple_K(test, [0,5])
+print kmpp(test, 3)
   
