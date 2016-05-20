@@ -1,5 +1,7 @@
 import numpy as np
 import csv
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 class Point:
   def __init__(self, value):
@@ -14,9 +16,8 @@ class Point:
     new_cluster.points.append(self)
 
   def distance_to(self, point):
-    # TODO: check equal dimensions
-    # TODO: adapt to 2+ dimensions
-    return x.value - point
+    return np.linalg.norm(self.value - point)
+    #return self.value - point
 
   def __str__(self):
     return str(self.value)
@@ -36,8 +37,8 @@ class Cluster:
 
   def compute_center(self):
     if self.points:
-      return sum(p.value for p in self.points) / float(len(self.points))
-      #return np.mean(self.points)
+      #return sum(p.value for p in self.points) / float(len(self.points))
+      return np.mean([p.value for p in self.points], axis=0)
     else:
       return self.center
 
@@ -46,7 +47,7 @@ class Cluster:
     self.center = self.compute_center()
     print " ", self, "with", [p.value for p in self.points]
     print "    center updated", old_center, "->", self.center
-    return (old_center != self.center)
+    return not np.array_equal(old_center, self.center)
 
   def __str__(self):
     return "cluster at center " + str(self.center)
@@ -84,7 +85,7 @@ def simple_K(input, initial_centers):
           min = (c, dist)
       print "    point", x, "added to", min[0]
       x.assign_cluster(min[0])
-      print "   ", x.cluster, "contains points", [p.value for p in x.cluster.points]
+      #print "   ", x.cluster, "contains points", [p.value for p in x.cluster.points]
 
     # update
     print "update step"
@@ -114,13 +115,26 @@ def csv2array(filename):
             except ValueError as ve:
                 continue
 
-
-        out.append(np.array(coord))
+        out.append(Point(np.array(coord)))
     #print out
-    print out[0], out[1]
-    print np.linalg.norm(out[0]-out[1])
+    #print out[0], out[1]
+    #print np.linalg.norm(out[0]-out[1])
     return out
 
-csv2array("dataset/iris.data")
+test =  csv2array("dataset/iris.data")
 #test = [Point(1), Point(2), Point(3), Point(4)]
-#simple_K(test, [0,5])
+results = simple_K(test, [np.array([10,10,10,10]),np.array([3,3,3,3]), np.array([1,1,1,1])])
+
+print results[0].points
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+for t in results[0].points:
+    ax.scatter(t.value[0], t.value[1], t.value[2])
+
+ax.set_xlabel('sepal length')
+ax.set_ylabel('sepal width')
+ax.set_zlabel('petal length')
+
+plt.show()
