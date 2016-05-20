@@ -13,6 +13,11 @@ class Point:
     self.cluster = new_cluster
     new_cluster.points.append(self)
     
+  def distance_to(self, point):
+    # TODO: check equal dimensions
+    # TODO: adapt to 2+ dimensions
+    return x.value - point
+    
   def __str__(self):
     return str(self.value)
 
@@ -57,6 +62,10 @@ def wcss(clusters):
   return sum
 
 
+def kmpp(input):
+  pass
+
+
 def simple_K(input, initial_centers):
   clusters = []
   for i in initial_centers:
@@ -69,7 +78,7 @@ def simple_K(input, initial_centers):
       print "  point", x
       min = (None, np.inf)
       for c in clusters:
-        dist = (x.value - c.center) ** 2
+        dist = x.distance_to(c.center) ** 2
         print "    distance to", c, ":", dist
         if dist < min[1]:
           min = (c, dist)
