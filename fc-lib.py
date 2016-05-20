@@ -39,12 +39,12 @@ class Cluster:
   def update_center(self):
     old_center = self.center
     self.center = self.compute_center()
-    print " ", [p.value for p in self.points]
-    print " ", old_center, "->", self.center
+    print " ", self, "with", [p.value for p in self.points]
+    print "    center updated", old_center, "->", self.center
     return (old_center != self.center)
     
   def __str__(self):
-    return "c: " + str(self.center) #+ ";" + str(self.points)
+    return "cluster at center " + str(self.center)
 
 
 def wcss(clusters):
@@ -70,12 +70,12 @@ def simple_K(input, initial_centers):
       min = (None, np.inf)
       for c in clusters:
         dist = (x.value - c.center) ** 2
-        print "    dist for", c, ":", dist
+        print "    distance to", c, ":", dist
         if dist < min[1]:
           min = (c, dist)
-      print "   ", x, "->", min[0]
+      print "    point", x, "added to", min[0]
       x.assign_cluster(min[0])
-      print "   ", x.cluster, ";", [p.value for p in x.cluster.points]
+      print "   ", x.cluster, "contains points", [p.value for p in x.cluster.points]
       
     # update
     print "update step"
@@ -85,8 +85,9 @@ def simple_K(input, initial_centers):
       print "   ", updated
         
     if not updated:
+      print "\nfinal clusters:", [str(c) for c in clusters]
       return clusters
     
 test = [Point(1), Point(2), Point(3), Point(4)]
-print simple_K(test, [0,5])
+simple_K(test, [0,5])
   
