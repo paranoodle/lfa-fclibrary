@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import stats
 import random
+import time
 
 
 class Point:
@@ -43,87 +44,96 @@ class Cluster:
     else:
       return self.center
     
-  def update_center(self):
+  def update_center(self, verbose=False):
     old_center = self.center
     self.center = self.compute_center()
-    print " ", self, "with", [p.value for p in self.points]
-    print "    center updated", old_center, "->", self.center
+    if verbose: print " ", self, "with", [p.value for p in self.points]
+    if verbose: print "    center updated", old_center, "->", self.center
     return (old_center != self.center)
     
   def __str__(self):
     return "cluster at center " + str(self.center)
 
 
-def wcss(clusters):
-  sum = 0
+def kmpp(input, cluster_count, verbose=False):
+  """K-means++. Computes starting cluster centers from a list of points.
   
-  for c in clusters:
-    for x in c.points:
-      sum += (x - c.center) ** 2
+  Args:
+      input (nparray[Point]): Array of observations
+      cluster_count (int): Number of desired clusters
+      verbose (bool): """
       
-  return sum
-
-
-def kmpp(input, center_count):
-  # choose random center
+  start = time.clock()
+      
+  # choose first random center
   i = random.randint(0,len(input)-1)
   centers = [input[i].value]
-  print [str(c) for c in centers]
   
-  for iter in xrange(center_count - 1):
-    # step 1
-    print "step 1"
+  for iter in xrange(cluster_count - 1):
+    # calculate distance
+    if verbose: print "step 1"
     dist = []
     for x in input:
       dist.append(min([x.distance_to(c) for c in centers]))
-    print "  dist",dist
+    if verbose: print "  dist",dist
     
-    # step 2
-    print "step 2"
+    # obtain new center
+    if verbose: print "step 2"
     xk = np.arange(len(input))
     dist_2 = map(lambda d: d ** 2, dist)
     dist_s = float(sum(dist_2))
     pk = map(lambda d: d / dist_s, dist_2) # probabilities, sum=1
-    print "  probabilities", pk
+    if verbose: print "  probabilities", pk
     rand = stats.rv_discrete(values=(xk, pk))
     centers.append(input[rand.rvs()].value)
-    print "  new center", centers[-1], "->", centers
+    if verbose: print "  new center", centers[-1], "->", centers
     
+  print "K-means++ complete, time taken:", time.clock() - start, "seconds"
   return centers
 
 
-def simple_K(input, initial_centers):
+def simple_K(input, initial_centers, verbose=False):
+  """Basic K-means.
+  
+  Args:
+      input (nparray[Point]): Array of observations
+      initial_centers (list[?]): Array of initial centers"""
+      
+  start = time.clock()
+      
   clusters = []
   for i in initial_centers:
     clusters.append(Cluster(center=i))
   
   while True:
     # assignment
-    print "assignment step"
+    if verbose: print "assignment step"
     for x in input:
-      print "  point", x
+      if verbose: print "  point", x
       min = (None, np.inf)
       for c in clusters:
         dist = x.distance_to(c.center) ** 2
-        print "    distance to", c, ":", dist
+        if verbose: print "    distance to", c, ":", dist
         if dist < min[1]:
           min = (c, dist)
-      print "    point", x, "added to", min[0]
+      if verbose: print "    point", x, "added to", min[0]
       x.assign_cluster(min[0])
-      print "   ", x.cluster, "contains points", [p.value for p in x.cluster.points]
+      if verbose: print "   ", x.cluster, "contains points", [p.value for p in x.cluster.points]
       
     # update
-    print "update step"
+    if verbose: print "update step"
     updated = False
     for c in clusters:
-      updated = c.update_center() or updated
-      print "   ", updated
+      updated = c.update_center(verbose) or updated
+      if verbose: print "   ", updated
         
     if not updated:
-      print "\nfinal clusters:", [str(c) for c in clusters]
+      if verbose: print "Final clusters:", [str(c) for c in clusters]
+      print "K-means complete, time taken:", time.clock() - start, "seconds"
       return clusters
     
 test = [Point(1), Point(2), Point(3), Point(4)]
-#simple_K(test, [0,5])
-print kmpp(test, 3)
+simple_K(test, kmpp(test, 2))
+
+simple_K(test, [0,5])
   
