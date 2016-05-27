@@ -125,12 +125,12 @@ test =  csv2array("dataset/iris.data")
 #test = [Point(1), Point(2), Point(3), Point(4)]
 results = simple_K(test, [np.array([10,10,10,10]),np.array([3,3,3,3]), np.array([1,1,1,1])])
 
-print results[0].points
+#print "\nresults[1].points: ", results[1].points
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
-for t in results[0].points:
+for t in results[1].points:
     ax.scatter(t.value[0], t.value[1], t.value[2])
 
 ax.set_xlabel('sepal length')
