@@ -123,15 +123,19 @@ def csv2array(filename):
 
 test =  csv2array("dataset/iris.data")
 #test = [Point(1), Point(2), Point(3), Point(4)]
-results = simple_K(test, [np.array([10,10,10,10]),np.array([3,3,3,3]), np.array([1,1,1,1])])
+results = simple_K(test, [np.array([5,5,5,5]),np.array([3,3,3,3]), np.array([2,2,2,2])])
 
 #print "\nresults[1].points: ", results[1].points
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
+for t in results[0].points:
+    ax.scatter(t.value[0], t.value[1], t.value[2], c="yellow")
 for t in results[1].points:
-    ax.scatter(t.value[0], t.value[1], t.value[2])
+    ax.scatter(t.value[0], t.value[1], t.value[2], c="red")
+for t in results[2].points:
+    ax.scatter(t.value[0], t.value[1], t.value[2], c="blue")
 
 ax.set_xlabel('sepal length')
 ax.set_ylabel('sepal width')
