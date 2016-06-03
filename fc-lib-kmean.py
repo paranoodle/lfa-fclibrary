@@ -2,6 +2,47 @@ import numpy as np
 import csv
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import time
+import random
+from scipy import stats
+
+
+def kmpp(input, cluster_count, verbose=False):
+  """K-means++. Computes starting cluster centers from a list of points.
+
+  Args:
+      input (nparray[Point]): Array of observations
+      cluster_count (int): Number of desired clusters
+      verbose (bool): """
+
+  start = time.clock()
+
+  # choose first random center
+  i = random.randint(0,len(input)-1)
+  centers = [input[i].value]
+
+  for iter in xrange(cluster_count - 1):
+    # calculate distance
+    if verbose: print "step 1"
+    dist = []
+    for x in input:
+      dist.append(min([x.distance_to(c) for c in centers]))
+    if verbose: print "  dist",dist
+
+    # obtain new center
+    if verbose: print "step 2"
+    xk = np.arange(len(input))
+    dist_2 = map(lambda d: d ** 2, dist)
+    dist_s = float(sum(dist_2))
+    pk = map(lambda d: d / dist_s, dist_2) # probabilities, sum=1
+    if verbose: print "  probabilities", pk
+    rand = stats.rv_discrete(values=(xk, pk))
+    centers.append(np.asarray(input[rand.rvs()].value))
+    if verbose: print "  new center", centers[-1], "->", centers
+
+  print "K-means++ complete, time taken:", time.clock() - start, "seconds"
+  return centers
+
 
 class Point:
   def __init__(self, value):
@@ -18,6 +59,9 @@ class Point:
   def distance_to(self, point):
     return np.linalg.norm(self.value - point)
     #return self.value - point
+
+  def __getitem__(self, i):
+    return self.value[i]
 
   def __str__(self):
     return str(self.value)
@@ -62,11 +106,6 @@ def wcss(clusters):
 
   return sum
 
-
-def kmpp(input):
-  pass
-
-
 def simple_K(input, initial_centers):
   clusters = []
   for i in initial_centers:
@@ -104,6 +143,7 @@ def csv2array(filename):
         lines = list(reader)
 
     out = []
+    ids = []
     for line in lines:
         coord = []
 
@@ -113,19 +153,26 @@ def csv2array(filename):
                 #print float(value)
                 coord.append(float(value))
             except ValueError as ve:
+                ids.append(value)
                 continue
 
         out.append(Point(np.array(coord)))
+
+
+
     #print out
     #print out[0], out[1]
     #print np.linalg.norm(out[0]-out[1])
-    return out
+    return out, ids
 
-test =  csv2array("dataset/iris.data")
-#test = [Point(1), Point(2), Point(3), Point(4)]
-results = simple_K(test, [np.array([5,5,5,5]),np.array([3,3,3,3]), np.array([2,2,2,2])])
 
-#print "\nresults[1].points: ", results[1].points
+test, ids =  csv2array("dataset/iris.data")
+print len(ids)
+
+
+centers =  kmpp(test, 3)
+
+results = simple_K(test, centers)
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -136,6 +183,54 @@ for t in results[1].points:
     ax.scatter(t.value[0], t.value[1], t.value[2], c="red")
 for t in results[2].points:
     ax.scatter(t.value[0], t.value[1], t.value[2], c="blue")
+
+ax.set_xlabel('sepal length')
+ax.set_ylabel('sepal width')
+ax.set_zlabel('petal length')
+
+plt.show()
+
+
+
+print "len(points): %i" % len(results[0].points)
+print "len(points): %i" % len(results[1].points)
+print "len(points): %i" % len(results[2].points)
+
+def getClusterSpecy(points, values):
+    matches = [0,0,0]
+    i = 0
+    for v in values:
+        for coord in points:
+            point = [coord.value[0], coord.value[1], coord.value[2], coord.value[3]]
+
+            if (point == test[i][:4]).all():
+                matches[i/50] += 1
+        i += 1
+
+    return max(enumerate(matches), key=lambda x: x[1])[0]
+
+cluster_ids = []
+cluster_ids.append(getClusterSpecy(results[0].points, test))
+cluster_ids.append(getClusterSpecy(results[1].points, test))
+cluster_ids.append(getClusterSpecy(results[2].points, test))
+print cluster_ids
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+for n in range(3):
+    for v in test[50*cluster_ids[n]:50*(cluster_ids[n]+1)]:
+        color = "red"
+        for coord in results[n].points:
+            point = [round(coord.value[0], 1), round(coord.value[1], 1), round(coord.value[2], 1), round(coord.value[3], 1)]
+
+            if (point == v[:4]).all():
+                color = "blue"
+                break
+
+
+        ax.scatter(v[0], v[1], v[2], c=color)
+
 
 ax.set_xlabel('sepal length')
 ax.set_ylabel('sepal width')
