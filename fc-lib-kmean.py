@@ -188,9 +188,6 @@ ax.set_xlabel('sepal length')
 ax.set_ylabel('sepal width')
 ax.set_zlabel('petal length')
 
-plt.show()
-
-
 
 print "len(points): %i" % len(results[0].points)
 print "len(points): %i" % len(results[1].points)
@@ -228,12 +225,13 @@ for n in range(3):
                 color = "blue"
                 break
 
-
         ax.scatter(v[0], v[1], v[2], c=color)
 
 
 ax.set_xlabel('sepal length')
 ax.set_ylabel('sepal width')
 ax.set_zlabel('petal length')
+
+
 
 plt.show()
