@@ -1,8 +1,11 @@
 import numpy as np
-from scipy import stats
-import random
-import time
+import csv
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
+import time
+import random
+from scipy import stats
 
 class Point:
   def __init__(self, value):
@@ -17,9 +20,11 @@ class Point:
     new_cluster.points.append(self)
 
   def distance_to(self, point):
-    # TODO: check equal dimensions
-    # TODO: adapt to 2+ dimensions
-    return abs(self.value - point)
+    return np.linalg.norm(self.value - point)
+    #return self.value - point
+
+  def __getitem__(self, i):
+    return self.value[i]
 
   def __str__(self):
     return str(self.value)
@@ -39,8 +44,7 @@ class Cluster:
 
   def compute_center(self):
     if self.points:
-      return sum(p.value for p in self.points) / float(len(self.points))
-      #return np.mean(self.points)
+      return np.mean([p.value for p in self.points], axis=0)
     else:
       return self.center
 
@@ -49,7 +53,7 @@ class Cluster:
     self.center = self.compute_center()
     if verbose: print " ", self, "with", [p.value for p in self.points]
     if verbose: print "    center updated", old_center, "->", self.center
-    return (old_center != self.center)
+    return not np.array_equal(old_center, self.center)
 
   def __str__(self):
     return "cluster at center " + str(self.center)
@@ -93,14 +97,6 @@ def kmpp(input, cluster_count, verbose=False):
 
 
 def simple_K(input, initial_centers, verbose=False):
-  """Basic K-means.
-
-  Args:
-      input (nparray[Point]): Array of observations
-      initial_centers (list[?]): Array of initial centers"""
-
-  start = time.clock()
-
   clusters = []
   for i in initial_centers:
     clusters.append(Cluster(center=i))
@@ -118,21 +114,36 @@ def simple_K(input, initial_centers, verbose=False):
           min = (c, dist)
       if verbose: print "    point", x, "added to", min[0]
       x.assign_cluster(min[0])
-      if verbose: print "   ", x.cluster, "contains points", [p.value for p in x.cluster.points]
 
     # update
     if verbose: print "update step"
     updated = False
     for c in clusters:
-      updated = c.update_center(verbose) or updated
+      updated = c.update_center() or updated
       if verbose: print "   ", updated
 
     if not updated:
-      if verbose: print "Final clusters:", [str(c) for c in clusters]
-      print "K-means complete, time taken:", time.clock() - start, "seconds"
+      print "\nfinal clusters:", [str(c) for c in clusters]
       return clusters
 
-test = [Point(1), Point(2), Point(3), Point(4)]
-simple_K(test, kmpp(test, 2))
+def csv2array(filename):
+    with open(filename, 'r') as f:
+        reader = csv.reader(f)
+        lines = list(reader)
 
-simple_K(test, [0,5])
+    out = []
+    ids = []
+    for line in lines:
+        coord = []
+
+        # Keep only float/integer
+        for value in line:
+            try:
+                coord.append(float(value))
+            except ValueError as ve:
+                ids.append(value)
+                continue
+
+        out.append(Point(np.array(coord)))
+
+    return out, ids
