@@ -1,4 +1,5 @@
-from fc_lib_kmean import *
+from fc_lib_cmean import *
+from fc_lib_kmean import kmpp
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -8,7 +9,8 @@ if __name__ == '__main__':
 
     centers =  kmpp(test, 3)
 
-    results = simple_K(test, centers)
+    results = simple_C(test, centers, True)
+
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -41,6 +43,7 @@ if __name__ == '__main__':
             i += 1
 
         return max(enumerate(matches), key=lambda x: x[1])[0]
+
 
     cluster_ids = []
     cluster_ids.append(getClusterSpecy(results[0].points, test))
