@@ -36,8 +36,9 @@ class FuzzyPoint:
 
 
 class FuzzyCluster:
-    def __init__(self, points=None, center=None):
+    def __init__(self, points=None, center=None, fuzzinessIndex = 2):
         self.points = {}
+        self.fuzzinessIndex = fuzzinessIndex
         if points:
             for p in points:
                 self.assign_point(p)
@@ -56,7 +57,16 @@ class FuzzyCluster:
 
     def compute_center(self):
         if self.points:
-            return np.mean([p.value for p in self.points], axis=0)
+
+            sumA = np.array([0,0,0,0])
+            sumB = 0
+            for point in self.points:
+                x = self.points[point] ** self.fuzzinessIndex
+                sumA = np.sum([[X * x for X in point], sumA], axis=0)
+                sumB += x
+
+            return [X * 1/sumB for X in sumA]
+            #return np.mean([p.value for p in self.points], axis=0)
         else:
             return self.center
 
@@ -95,11 +105,11 @@ def csv2array(filename):
 """
 @link https://sites.google.com/site/dataclusteringalgorithms/fuzzy-c-means-clustering-algorithm
 """
-def simple_C(input, initial_centers, verbose=True, fuzzinessIndex = 1):
+def simple_C(input, initial_centers, verbose=True, fuzzinessIndex = 2):
     """not actually that simple"""
     clusters = []
     for i in initial_centers:
-        clusters.append(FuzzyCluster(center=i))
+        clusters.append(FuzzyCluster(center=i, fuzzinessIndex=fuzzinessIndex))
 
     while True:
         # assignment
