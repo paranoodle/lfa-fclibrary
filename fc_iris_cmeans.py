@@ -1,5 +1,7 @@
 from fc_lib_cmean import *
 from fc_lib_kmean import kmpp
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 if __name__ == '__main__':
     test, ids =  csv2array("dataset/iris.data")
@@ -9,7 +11,7 @@ if __name__ == '__main__':
 
     results = simple_C(test, centers, True)
 
-    """
+
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -69,4 +71,3 @@ if __name__ == '__main__':
     ax.set_zlabel('petal length')
 
     plt.show()
-    """

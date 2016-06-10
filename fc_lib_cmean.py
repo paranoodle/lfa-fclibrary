@@ -92,6 +92,9 @@ def csv2array(filename):
 
     return out, ids
 
+"""
+@link https://sites.google.com/site/dataclusteringalgorithms/fuzzy-c-means-clustering-algorithm
+"""
 def simple_C(input, initial_centers, verbose=True, fuzzinessIndex = 1):
     """not actually that simple"""
     clusters = []
@@ -102,6 +105,9 @@ def simple_C(input, initial_centers, verbose=True, fuzzinessIndex = 1):
         # assignment
         if verbose: print "assignment step"
 
+        """
+        @links https://sites.google.com/site/dataclusteringalgorithms/_/rsrc/1273050108083/fuzzy-c-means-clustering-algorithm/fuzzy1.bmp
+        """
         u = [] # uij represents the membership of ith data to jth cluster center.
         d = [] # dij represents the Euclidean distance between ith data and jth cluster center.
         i = 0  # ith point
@@ -134,7 +140,6 @@ def simple_C(input, initial_centers, verbose=True, fuzzinessIndex = 1):
                 if verbose: print "    weight for", cluster, ":", u[i][j]
                 j += 1
 
-
             for j in range(len(clusters)):
                 point.assign_cluster(clusters[j], u[i][j])
 
@@ -149,3 +154,4 @@ def simple_C(input, initial_centers, verbose=True, fuzzinessIndex = 1):
 
         if not updated:
             print "finish :)"
+            return clusters
