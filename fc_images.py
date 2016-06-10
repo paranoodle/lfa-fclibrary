@@ -14,7 +14,10 @@ if __name__ == '__main__':
             test.append(fc.Point(im[row,col]))
     print "converted to points"
 
-    centers = fc.kmpp(test, 4)
+    cluster_count = fc.sub_clustering(test, 255)
+    print "calculated cluster count with subtractive clustering -", cluster_count
+
+    centers = fc.kmpp(test, cluster_count)
     print "calculated centers with k-means++"
 
     results = fc.simple_K(test, centers)
