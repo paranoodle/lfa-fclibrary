@@ -5,6 +5,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 import time
 import random
+import math
 from scipy import stats
 
 class Point:
@@ -57,6 +58,38 @@ class Cluster:
 
   def __str__(self):
     return "cluster at center " + str(self.center)
+
+
+def sub_clustering(input, radius=1.0, threshold=0.1, verbose=False):
+    def exp(point1, point2):
+        return math.exp(-((point1.distance_to(point2.value))**2)/((radius/2)**2))
+
+    centers = []
+    available = [point for point in input]
+
+    if verbose: print "starting with", len(available), "input points"
+    while len(available) > (len(input) * threshold):
+        densities = {}
+        for point in available:
+            dm = 0.0
+            for point2 in input:
+                dm += exp(point, point2)
+            densities[point] = dm
+
+        new_center = max(densities, key=densities.get)
+        centers.append(new_center)
+        if verbose: print "max", max(densities.values())
+        if verbose: print "min", min(densities.values())
+        if verbose: print "new center", new_center
+
+        for point in available:
+            dist = point.distance_to(new_center.value)
+            if dist < radius:
+                available.remove(point)
+
+        if verbose: print len(available), "points still available"
+
+    return len(centers)
 
 
 def kmpp(input, cluster_count, verbose=False):
