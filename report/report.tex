@@ -187,7 +187,7 @@
   Source du dataset: \url{archive.ics.uci.edu/ml/datasets/Iris}
 
   \newpage
-  Les différents couleurs représentent les clusters (les variétés d'iris) (figure \ref{fig:kmeans-iris}).
+  Les différents couleurs représentent les clusters, les trois variétés d'iris (Setosa, Versicolour et Virginica) (figure \ref{fig:kmeans-iris}).
 
   Sur la figure \ref{fig:kmeans-iris} on peut voir les erreurs en rouge.
 
@@ -251,6 +251,14 @@
         Le module \texttt{fc\_lib\_cmean} offre une méthode de soft clustering, \texttt{simple\_C}, qui correspond à une implémentation de C-means. Cette méthode peut être utilisée avec les méthodes \texttt{sub\_clustering} et \texttt{kmpp} du module \texttt{fc\_lib\_kmean}.
 
     \subsection{Interactions avec Iris}
+
+    Le fichier \path{fc_iris.py} est l'exemple utilisé pour fournir les plots 3D de l'utilisation de K-means avec l'Iris Dataset.
+    Lorqu'il est lancé, le fichier \path{dataset/iris.data} contenant les données est parsé puis passé à notre implémentation de K-means,
+    finalement deux plots 3D sont produits.
+    Le premier représente les attributs \texttt{sepal length}, \texttt{width length} et \texttt{petal length} et la couleurs des points
+    représentent les trois clusters.
+    Le second représente les erreurs (points rouges).
+
 
     \subsection{Interaction avec images}
       Le module \texttt{fc\_images} permet de facilement tester les méthodes k-means ou c-means sur une image de votre choix. Pour une image \texttt{test.png}, il serait lancé tel que:

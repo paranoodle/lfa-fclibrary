@@ -190,9 +190,12 @@ def simple_K(input, initial_centers, verbose=False):
             return clusters
 
 
+
 def csv2array(filename):
     """
-
+    Parse a csv file to array
+    Args:
+        - filename: full path and filename to csv file
     """
     with open(filename, 'r') as f:
         reader = csv.reader(f)
