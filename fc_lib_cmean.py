@@ -4,6 +4,7 @@ import time
 import random
 from scipy import stats
 
+
 class FuzzyPoint:
     def __init__(self, value):
         self.value = value
@@ -14,8 +15,6 @@ class FuzzyPoint:
         return sum(self.clusters[c] for c in self.clusters)
 
     def assign_cluster(self, new_cluster, new_weight):
-        #assert(self.weight + new_weight <= 1, "cluster weights > 1")
-
         self.clusters[new_cluster] = new_weight
         new_cluster.assign_point(self, new_weight)
 
@@ -36,9 +35,9 @@ class FuzzyPoint:
 
 
 class FuzzyCluster:
-    def __init__(self, points=None, center=None, fuzzinessIndex = 2):
+    def __init__(self, points=None, center=None, fuzziness_index=2):
         self.points = {}
-        self.fuzzinessIndex = fuzzinessIndex
+        self.fuzziness_index = fuzziness_index
         if points:
             for p in points:
                 self.assign_point(p)
@@ -57,28 +56,26 @@ class FuzzyCluster:
 
     def compute_center(self):
         if self.points:
-
-            sumA = np.array([0,0,0,0])
-            sumB = 0
+            sumA = np.zeros(len(self.center))
+            sumB = 0.
             for point in self.points:
-                x = self.points[point] ** self.fuzzinessIndex
+                x = self.points[point] ** self.fuzziness_index
                 sumA = np.sum([[X * x for X in point], sumA], axis=0)
                 sumB += x
 
-            return [X * 1/sumB for X in sumA]
-            #return np.mean([p.value for p in self.points], axis=0)
+            return [x / sumB for x in sumA]
         else:
             return self.center
 
     def update_center(self, verbose=False):
         old_center = self.center
         self.center = self.compute_center()
-        if verbose: print " ", self, "with", [p.value for p in self.points]
         if verbose: print "    center updated", old_center, "->", self.center
-        return not np.array_equal(old_center, self.center)
+        return np.linalg.norm(np.array(self.center) - np.array(old_center))
 
     def __str__(self):
         return "cluster at center " + str(self.center)
+
 
 def csv2array(filename):
     with open(filename, 'r') as f:
@@ -102,65 +99,44 @@ def csv2array(filename):
 
     return out, ids
 
-"""
-@link https://sites.google.com/site/dataclusteringalgorithms/fuzzy-c-means-clustering-algorithm
-"""
-def simple_C(input, initial_centers, verbose=True, fuzzinessIndex = 2):
-    """not actually that simple"""
+
+def simple_C(input, initial_centers, termination_value=1, fuzziness_index=1, verbose=False):
     clusters = []
     for i in initial_centers:
-        clusters.append(FuzzyCluster(center=i, fuzzinessIndex=fuzzinessIndex))
+        clusters.append(FuzzyCluster(center=i, fuzziness_index=fuzziness_index))
 
     while True:
+        fuzzy_membership = {}
+        fuzzy_distance = {}
+
         # assignment
         if verbose: print "assignment step"
-
-        """
-        @links https://sites.google.com/site/dataclusteringalgorithms/_/rsrc/1273050108083/fuzzy-c-means-clustering-algorithm/fuzzy1.bmp
-        """
-        u = [] # uij represents the membership of ith data to jth cluster center.
-        d = [] # dij represents the Euclidean distance between ith data and jth cluster center.
-        i = 0  # ith point
-        for point in input:
+        for i, point in enumerate(input):
             if verbose: print "  point", point
-            u.append([])
-            d.append([])
 
-            # init
-            for k in range(len(clusters)):
-                d[i].append(0)
-                u[i].append(0)
+            for k, cluster in enumerate(clusters):
+                fuzzy_distance[(i,k)] = point.distance_to(cluster.center)
+                if verbose: print "    distance to", cluster, ":", fuzzy_distance[(i,k)]
 
-            j = 0 # jth cluster center
-            for cluster in clusters:
+            for j, cluster in enumerate(clusters):
+                fil = {k:v for k,v in fuzzy_distance.iteritems() if k[0] == i}
 
-                _sum = 0
-                d[i][j] = point.distance_to(cluster.center)
-                if verbose: print "    distance to", cluster, ":", d[i][j]
-                dist = d[i][j] ** 2
+                m = min(fil, key=fil.get)
 
-                k = 0
-                for cluster in clusters:
-                    d[i][k] = point.distance_to(cluster.center)
+                if fuzzy_distance[m] == 0.0:
+                    fuzzy_membership[(i,j)] = 1.0 if m == (i,j) else 0.0
+                else:
+                    d = map(lambda x: (fuzzy_distance[(i,j)] / fuzzy_distance[x]) ** (2. / fuzziness_index - 1), fil.keys())
+                    fuzzy_membership[(i,j)] = 1. / sum(d)
 
-                    _sum += (d[i][j] / d[i][k]) ** (2/fuzzinessIndex - 1)
-                    k += 1
-
-                u[i][j] = 1/_sum
-                if verbose: print "    weight for", cluster, ":", u[i][j]
-                j += 1
-
-            for j in range(len(clusters)):
-                point.assign_cluster(clusters[j], u[i][j])
-
-            i += 1
-
+                point.assign_cluster(cluster, fuzzy_membership[(i,j)])
+                if verbose: print "    assigned to", cluster, "with membership", fuzzy_membership[(i,j)]
 
         # update
         if verbose: print "update step"
-        updated = False
-        for c in clusters:
-            updated = c.update_center() or updated
+        cluster_sum = sum(c.update_center(True) for c in clusters)
+        if verbose: print "testing", cluster_sum, "<", termination_value
+        updated = cluster_sum > termination_value
 
         if not updated:
             print "finish :)"
