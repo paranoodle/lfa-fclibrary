@@ -162,12 +162,12 @@
   \url{https://sites.google.com/site/dataclusteringalgorithms/fuzzy-c-means-clustering-algorithm}
 
 
-  \subsection{Tests et exemples}
+  \section{Résultats}
 
   Notre implémentation possède un mode \texttt{verbose} permettant d'afficher beaucoup
   d'informations supplémentaires, c'est très utile pour le debug et également pour mieux comprendre ce qui est fait.
 
-  \
+  \subsection{Iris Dataset}
 
   Nous avons choisi d'utiliser le Iris Dataset comme exemple, pour plusieurs raisons;
   nous avons déjà travaillé dessus et ce dataset est très connu ce qui nous a permis de
@@ -179,8 +179,6 @@
     \caption{Scatterplot du dataset (source: wikipedia.org)}
     \label{fig:scatterplot-wiki}
   \end{figure}
-
-
 
   Vu que l'Iris Dataset possède 4 attributs (sepal length, sepal width, petal length, petal width),
   nous ne pouvons pas représenter le tout sur un seul plot 3D, nous avons donc choisi de prendre les trois premiers attributs
@@ -203,175 +201,43 @@
     \label{fig:kmeans-iris}
   \end{figure}
 
-  % \begin{figure}[h]
-  %   \centering
-  %   \includegraphics[scale=0.5]{images/kmean-cluster.png}
-  %   \caption{K-means: plot 3D}
-  %   \label{fig:kmeans-cluster}
-  % \end{figure}
-  %
-  % \begin{figure}[h]
-  %   \centering
-  %   \includegraphics[scale=0.5]{images/kmean-false.png}
-  %   \caption{K-means: erreurs en rouge}
-  %   \label{fig:kmeans-errors}
-  % \end{figure}
+  \subsection{Traitement d'images}
 
-  Comme second exemple nous avons décidé de travailler sur des images, il s'agit
-  de l'exemple le plus parlant que nous avons pu trouver. En effet, même quelqu'un
-  n'étant pas dans le domaine peut facilement voir et comprendre le résultat obtenu.
+  Comme second exemple nous avons décidé de travailler sur des images, puisqu'il s'agit de l'exemple le plus parlant que nous avons pu trouver. En effet, même quelqu'un n'étant pas dans le domaine peut facilement voir et comprendre le résultat obtenu.
 
+  Nous nous sommes limités à des petites images (la plus grande a des dimensions de 50x50 pixels), vu que les temps de calculs avec 16 clusters atteignaient les minutes.
 
-  % TEST.PNG
+  Les images sont présentées avec l'image originale tout à gauche, suivi des résultats de K-means en haut, et les résultats de C-means en bas, chacun montrant le résultat à 2, 4, 8, et 16 clusters respectivement.
 
   \begin{figure}[h]
     \centering
-    \includegraphics[scale=8]{images/test.png}
-    \caption{test.png: Image de base}
-    \label{fig:}
+    \includegraphics[width=\textwidth]{images/concat_testing_mini.png}
   \end{figure}
+
+  Ce premier exemple utilise un simple dégradé, et on remarque qu'avec suffisamment de clusters, on voit de moins en moins de différences entre les résultats.
 
   \begin{figure}[h]
     \centering
-    \includegraphics[scale=6]{images/result_test_k_4.png}
-    \caption{test.png: K-means 4 clusters}
-    \label{fig:}
+    \includegraphics[width=\textwidth]{images/concat_boss.png}
   \end{figure}
+
+  \newpage
+  Ce deuxième exemple est affiché avec du noir pour symboliser la transparence, montrant que le script fonctionne même avec des informations d'alpha. On remarque que C-means permet de perdre beaucoup moins de détails, même avec très peu de clusters, mais a tendance à avoir des centres de clusters moins distincts que K-means.
 
   \begin{figure}[h]
     \centering
-    \includegraphics[scale=6]{images/result_test_k_8.png}
-    \caption{test.png: K-means 8 clusters}
-    \label{fig:}
+    \includegraphics[width=\textwidth]{images/concat_test.png}
   \end{figure}
 
-  \begin{figure}[h]
-    \centering
-    \includegraphics[scale=6]{images/result_test_k_16.png}
-    \caption{test.png: K-means 16 clusters}
-    \label{fig:}
-  \end{figure}
+  Ce dernier exemple emploie plus de couleurs et est moins \textit{discret} que les deux précédentes. Similairement aux autres exemples, C-means donne de bien meilleurs résultats si on se limite à 2 ou 4 clusters, mais obtients des centres moins intéressant que K-means quand on augmente les clusters.
 
-  \begin{figure}[h]
-    \centering
-    \includegraphics[scale=6]{images/result_test_c_4.png}
-    \caption{test.png: C-means 4 clusters}
-    \label{fig:}
-  \end{figure}
+  \newpage
+  \section{Utilisation}
+    \subsection{Fonctions internes}
 
-  \begin{figure}[h]
-    \centering
-    \includegraphics[scale=6]{images/result_test_c_8.png}
-    \caption{test.png: C-means 8 clusters}
-    \label{fig:}
-  \end{figure}
+    \subsection{Interactions avec Iris}
 
-  \begin{figure}[h]
-    \centering
-    \includegraphics[scale=6]{images/result_test_c_16.png}
-    \caption{test.png: C-means 16 clusters}
-    \label{fig:}
-  \end{figure}
-
-
-  % TESTING_MINI.PNG
-
-  \begin{figure}[h]
-    \centering
-    \includegraphics[scale=8]{images/testing_mini.png}
-    \caption{testing\_mini.png: Image de base}
-    \label{fig:}
-  \end{figure}
-
-  \begin{figure}[h]
-    \centering
-    \includegraphics[scale=6]{images/result_testing_mini_k_4.png}
-    \caption{testing\_mini.png: K-means 4 clusters}
-    \label{fig:}
-  \end{figure}
-
-  \begin{figure}[h]
-    \centering
-    \includegraphics[scale=6]{images/result_testing_mini_k_8.png}
-    \caption{testing\_mini.png: K-means 8 clusters}
-    \label{fig:}
-  \end{figure}
-
-  \begin{figure}[h]
-    \centering
-    \includegraphics[scale=6]{images/result_testing_mini_k_16.png}
-    \caption{testing\_mini.png: K-means 16 clusters}
-    \label{fig:}
-  \end{figure}
-
-  \begin{figure}[h]
-    \centering
-    \includegraphics[scale=6]{images/result_testing_mini_c_4.png}
-    \caption{testing\_mini.png: C-means 4 clusters}
-    \label{fig:}
-  \end{figure}
-
-  \begin{figure}[h]
-    \centering
-    \includegraphics[scale=6]{images/result_testing_mini_c_8.png}
-    \caption{testing\_mini.png: C-means 8 clusters}
-    \label{fig:}
-  \end{figure}
-
-  \begin{figure}[h]
-    \centering
-    \includegraphics[scale=6]{images/result_testing_mini_c_16.png}
-    \caption{testing\_mini.png: C-means 16 clusters}
-    \label{fig:}
-  \end{figure}
-
-
-  % BOSS.PNG
-  % Pose problème (latex), je ne sais pas pourquoi
-
-  \iffalse
-  \begin{figure}
-    \includegraphics[scale=2]{images/boss.png}
-    \caption{boss.png: Image de base}
-    \label{fig:}
-  \end{figure}
-
-  \begin{figure}
-    \includegraphics[scale=2]{images/result_boss_k_4.png}
-    \caption{boss.png: K-means 4 clusters}
-    \label{fig:}
-  \end{figure}
-
-  \begin{figure}
-    \includegraphics[scale=2]{images/result_boss_k_8.png}
-    \caption{boss.png: K-means 8 clusters}
-    \label{fig:}
-  \end{figure}
-
-  \begin{figure}
-    \includegraphics[scale=2]{images/result_boss_k_16.png}
-    \caption{boss.png: K-means 16 clusters}
-    \label{fig:}
-  \end{figure}
-
-  \begin{figure}
-    \includegraphics[scale=2]{images/result_boss_c_4.png}
-    \caption{boss.png: C-means 4 clusters}
-    \label{fig:}
-  \end{figure}
-
-  \begin{figure}
-    \includegraphics[scale=2]{images/result_boss_c_8.png}
-    \caption{boss.png: C-means 8 clusters}
-    \label{fig:}
-  \end{figure}
-
-  \begin{figure}
-    \includegraphics[scale=2]{images/result_boss_c_16.png}
-    \caption{boss.png: C-means 16 clusters}
-    \label{fig:}
-  \end{figure}
-  \fi
+    \subsection{Interaction avec images}
 
   \section{Conclusion}
 
