@@ -5,8 +5,6 @@
 \usepackage{subfig}
 \usepackage{url}
 
-\setlength{\parskip}{1em}
-
 \title{Fuzzy Clustering Library}
 \date{13.5.2016}
 \author{Eléonore d'Agostino et Benoît Zuckschwerdt}
@@ -15,6 +13,7 @@
   \pagenumbering{arabic}
   \maketitle
   \tableofcontents
+  \setlength{\parskip}{1em}
   \newpage
 
   \section{Introduction}
@@ -234,6 +233,22 @@
   \newpage
   \section{Utilisation}
     \subsection{Fonctions internes}
+      Toutes ces fonctions sont documentées dans le code si vous avez besoin de plus de précisions sur comment les utiliser.
+
+      \subsubsection{Module K-means}
+        Le module \texttt{fc\_lib\_kmean} offre plusieurs fonctions de hard clustering:
+
+        \begin{itemize}
+          \item \texttt{csv2array} est une méthode utilitaire pour convertir un fichier .csv en un tableau utilisable par les autres méthodes.
+          \item \texttt{sub\_clustering} permet de calculer le nombre de clusters pour un set de données.
+          \item \texttt{kmpp} correspond à une implémentation de K-means++, et permet de calculer les centres de départ pour un set de données et nombre de clusters donnés.
+          \item \texttt{simple\_K} correspond à une implémentation de K-means, et calcule les clusters pour un set de données et centres de clusters initiaux.
+        \end{itemize}
+
+        Ces fonctions peuvent être chainées telles que: \texttt{simple\_K(data, kmpp(data, sub\_clustering(data)))}
+
+      \subsubsection{Module C-means}
+        Le module \texttt{fc\_lib\_cmean} offre une méthode de soft clustering, \texttt{simple\_C}, qui correspond à une implémentation de C-means. Cette méthode peut être utilisée avec les méthodes \texttt{sub\_clustering} et \texttt{kmpp} du module \texttt{fc\_lib\_kmean}.
 
     \subsection{Interactions avec Iris}
 
@@ -246,6 +261,16 @@
 
 
     \subsection{Interaction avec images}
+      Le module \texttt{fc\_images} permet de facilement tester les méthodes k-means ou c-means sur une image de votre choix. Pour une image \texttt{test.png}, il serait lancé tel que:
+
+      {\centering
+        \texttt{python fc\_images.py X test Y}
+      \par}
+
+      \begin{itemize}
+         \item \texttt{X} prend la valeur de \texttt{k} ou \texttt{K} pour une utilisation de k-means, et \texttt{c} ou \texttt{C} pour une utilisation de c-means
+         \item \texttt{Y} optionnel, correspond au nombre de clusters désirés. Si non-spécifié, \texttt{sub\_clustering} sera utilisé pour le calculer.
+      \end{itemize}
 
   \section{Conclusion}
 
