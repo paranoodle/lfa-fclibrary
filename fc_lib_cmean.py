@@ -6,6 +6,10 @@ from scipy import stats
 
 
 class FuzzyPoint:
+    """
+    Represents a point, for use in fuzzy clustering algorithms.
+    Linked to its containing clusters, with weights.
+    """
     def __init__(self, value):
         self.value = value
         self.clusters = {}
@@ -35,6 +39,10 @@ class FuzzyPoint:
 
 
 class FuzzyCluster:
+    """
+    Represents a cluster, for use in fuzzy clustering algorithms.
+    Linked to its contained points, with weights.
+    """
     def __init__(self, points=None, center=None, fuzziness_index=2):
         self.points = {}
         self.fuzziness_index = fuzziness_index
@@ -78,6 +86,9 @@ class FuzzyCluster:
 
 
 def csv2array(filename):
+    """
+
+    """
     with open(filename, 'r') as f:
         reader = csv.reader(f)
         lines = list(reader)
@@ -100,7 +111,18 @@ def csv2array(filename):
     return out, ids
 
 
-def simple_C(input, initial_centers, termination_value=1, fuzziness_index=1, verbose=False):
+def simple_C(input, initial_centers, termination_value=1, fuzziness_index=2, verbose=False):
+    """
+    C-means implementation, sorts a set of data into fuzzy clusters.
+    Args:
+        - input (nparray[FuzzyPoint]): Array of observations
+        - initial_centers (list): List of cluster centers
+        - termination_value (float): Total distance from cluster updates allowed before the clusters are considered as updated
+        - fuzziness_index (float): How "fuzzy" the cluster thresholds are allowed to be
+        - verbose (bool): Whether to output computation details
+    Returns:
+        - list[FuzzyCluster] of the clusters with their contained points and weights
+    """
     clusters = []
     for i in initial_centers:
         clusters.append(FuzzyCluster(center=i, fuzziness_index=fuzziness_index))
@@ -126,7 +148,7 @@ def simple_C(input, initial_centers, termination_value=1, fuzziness_index=1, ver
                 if fuzzy_distance[m] == 0.0:
                     fuzzy_membership[(i,j)] = 1.0 if m == (i,j) else 0.0
                 else:
-                    d = map(lambda x: (fuzzy_distance[(i,j)] / fuzzy_distance[x]) ** (2. / fuzziness_index - 1), fil.keys())
+                    d = map(lambda x: (fuzzy_distance[(i,j)] / fuzzy_distance[x]) ** (2. / (fuzziness_index - 1)), fil.keys())
                     fuzzy_membership[(i,j)] = 1. / sum(d)
 
                 point.assign_cluster(cluster, fuzzy_membership[(i,j)])
@@ -134,7 +156,7 @@ def simple_C(input, initial_centers, termination_value=1, fuzziness_index=1, ver
 
         # update
         if verbose: print "update step"
-        cluster_sum = sum(c.update_center(True) for c in clusters)
+        cluster_sum = sum(c.update_center(verbose) for c in clusters)
         if verbose: print "testing", cluster_sum, "<", termination_value
         updated = cluster_sum > termination_value
 
