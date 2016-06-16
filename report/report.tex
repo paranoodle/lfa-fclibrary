@@ -156,8 +156,8 @@
   par conséquent nous avons préféré avoir une bonne implémentation fonctionnelle
   de C-means au lieu d'avoir un C-means et un EM qui ne fonctionnent pas.
 
-  Pour mettre en place C-means, nous avons chercher plusieurs documents,
-  à notre grande surprise les données formules étaient souvent un peu différentes.
+  Pour mettre en place C-means, nous avons chercher plusieurs documents, et
+  à notre grande surprise les formules données étaient souvent un peu différentes.
   Finalement, nous nous sommes surtout basé sur le document suivant:
   \url{https://sites.google.com/site/dataclusteringalgorithms/fuzzy-c-means-clustering-algorithm}
 
@@ -169,7 +169,7 @@
 
   \
 
-  Nous avons choisi d'utiliser le Iris Dataset comme exemple, pour plusieurs raisons,
+  Nous avons choisi d'utiliser le Iris Dataset comme exemple, pour plusieurs raisons;
   nous avons déjà travaillé dessus et ce dataset est très connu ce qui nous a permis de
   pouvoir comparer nos résultats avec d'autres sur le Web.
 
@@ -179,6 +179,13 @@
     \caption{Scatterplot du dataset (source: wikipedia.org)}
     \label{fig:scatterplot-wiki}
   \end{figure}
+
+
+
+  Vu que l'Iris Dataset possède 4 attributs (sepal length, sepal width, petal length, petal width),
+  nous ne pouvons pas représenter le tout sur un seul plot 3D, nous avons donc choisi de prendre les trois premiers attributs
+  pour représenter les axes
+  et d'utiliser la couleur des points pour représenter les clusters.
 
   Source du dataset: \url{archive.ics.uci.edu/ml/datasets/Iris}
 
@@ -191,9 +198,13 @@
   \section{Conclusion}
 
   Ce projet nous a permis de bien comprendre K-means et C-means, le fait de devoir les implémenter
-  manuellement nous a pousser à connaître ces algorithmes de manières très détaillées.
-  Nous avons malheureu
-  Il a était très intéressant de pouvoir les appliquer sur le Iris Dataset, mais également sur des images.
+  manuellement nous a pousser à connaître ces algorithmes de manières très détaillés.
+  Nous avons malheureusement pas pu implémenter l'algorithme Expectation-Maximization,
+  ceci à cause des difficultés rencontrées lors de l'implémentation de C-means.
+  Il nous a paru mieux d'arriver à avoir une bonne implémentation fonctionnelle de C-means,
+  au lieu d'avoir deux algorithmes non fonctionnnelles.
+  Concernant l'application de ces algorithmes,
+  il a était très intéressant de pouvoir les appliquer sur le Iris Dataset, mais également sur les images.
 
 \bibliography{biblio}
 \nocite{*}
