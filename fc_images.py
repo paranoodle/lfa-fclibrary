@@ -7,7 +7,7 @@ import sys
 
 
 # usage:
-#   python fc_images_cmeans.py [c]/[k] [IMAGE_NAME] [CLUSTER_COUNT]
+#   python fc_images.py [c]/[k] [IMAGE_NAME] [CLUSTER_COUNT]
 if __name__ == '__main__':
     if len(sys.argv) <= 1 or sys.argv[1] not in ['k', 'c', 'K', 'C']:
         print "Usage: %s c|k IMAGE_NAME CLUSTER_COUNT" % sys.argv[0]
