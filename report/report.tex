@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
-\bibliographystyle{plainnat}
+\usepackage{subfig}
 \usepackage{url}
 
 \setlength{\parskip}{1em}
@@ -158,7 +158,7 @@
 
   Pour mettre en place C-means, nous avons chercher plusieurs documents, et
   à notre grande surprise les formules données étaient souvent un peu différentes.
-  Finalement, nous nous sommes surtout basé sur le document suivant:
+  Finalement, nous nous sommes surtout basé sur le document suivant:\\
   \url{https://sites.google.com/site/dataclusteringalgorithms/fuzzy-c-means-clustering-algorithm}
 
 
@@ -189,25 +189,33 @@
 
   Source du dataset: \url{archive.ics.uci.edu/ml/datasets/Iris}
 
-  Les différents couleurs représentent les clusters, les trois variétés d'iris (Setosa, Versicolour et Virginica)  (figure \ref{fig:kmeans-cluster}).
+  \newpage
+  Les différents couleurs représentent les clusters, les trois variétés d'iris (Setosa, Versicolour et Virginica) (figure \ref{fig:kmeans-iris}).
 
-  Sur la figure \ref{fig:kmeans-errors} on peut voir les erreurs en rouge.
-  
-  \begin{figure}[h]
-    \centering
-    \includegraphics[scale=0.5]{images/kmean-cluster.png}
-    \caption{K-means: plot 3D}
-    \label{fig:kmeans-cluster}
-  \end{figure}
+  Sur la figure \ref{fig:kmeans-iris} on peut voir les erreurs en rouge.
 
   \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.5]{images/kmean-false.png}
-    \caption{K-means: erreurs en rouge}
-    \label{fig:kmeans-errors}
+    \subfloat{{\includegraphics[width=0.45\textwidth]{images/kmean-cluster.png}}}%
+    \qquad
+    \subfloat{{\includegraphics[width=0.45\textwidth]{images/kmean-false.png}}}%
+    \caption{K-means: (gauche) plot 3D, (droite) erreurs en rouge}%
+    \label{fig:kmeans-iris}
   \end{figure}
 
-  \
+  % \begin{figure}[h]
+  %   \centering
+  %   \includegraphics[scale=0.5]{images/kmean-cluster.png}
+  %   \caption{K-means: plot 3D}
+  %   \label{fig:kmeans-cluster}
+  % \end{figure}
+  %
+  % \begin{figure}[h]
+  %   \centering
+  %   \includegraphics[scale=0.5]{images/kmean-false.png}
+  %   \caption{K-means: erreurs en rouge}
+  %   \label{fig:kmeans-errors}
+  % \end{figure}
 
   Comme second exemple nous avons décidé de travailler sur des images, il s'agit
   de l'exemple le plus parlant que nous avons pu trouver. En effet, même quelqu'un
@@ -375,8 +383,5 @@
   au lieu d'avoir deux algorithmes non fonctionnnelles.
   Concernant l'application de ces algorithmes,
   il a était très intéressant de pouvoir les appliquer sur le Iris Dataset, mais également sur les images.
-
-\bibliography{biblio}
-\nocite{*}
 
 \end{document}
