@@ -10,7 +10,7 @@ import sys
 #   python fc_images_cmeans.py [c]/[k] [IMAGE_NAME] [CLUSTER_COUNT]
 if __name__ == '__main__':
     if len(sys.argv) <= 1 or sys.argv[1] not in ['k', 'c', 'K', 'C']:
-        print "incorrect arguments"
+        print "Usage: %s c|k IMAGE_NAME CLUSTER_COUNT" % sys.argv[0]
         exit()
 
     c_mode = sys.argv[1] in ['C', 'c']
